@@ -3,6 +3,7 @@ module fullstack_test
 go 1.21.5
 
 require (
+	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20231201235250-de7065d80cb9 // indirect

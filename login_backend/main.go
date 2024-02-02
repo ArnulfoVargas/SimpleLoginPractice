@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	// "fullstack_test/middleware"
+	"fullstack_test/models"
 	"fullstack_test/routes"
 	"net/http"
 	"os"
@@ -13,8 +15,10 @@ import (
 )
 
 func main() {
+  models.DbMigrate()
 	muxS := mux.NewRouter()
 
+  // muxS.Use(middleware.ValidateJWT)
   routes.HandleRoutes(muxS)
 
   // Set up Cors
