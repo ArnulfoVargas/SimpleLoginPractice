@@ -1,7 +1,13 @@
 package login_routes
 
-import "github.com/gorilla/mux"
+import (
+	"fullstack_test/middleware"
+	"net/http"
+
+	"github.com/gorilla/mux"
+)
 
 func HandleLogin(r *mux.Router) {
-  r.HandleFunc("/login", postLogin)
+  r.HandleFunc("/login", postLogin).Methods(http.MethodPost)
+  r.HandleFunc("/jwt", middleware.ValidateJWT(loginByJWT))
 }

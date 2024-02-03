@@ -20,7 +20,7 @@ func GenerateJWT(user models.User) (string, error){
 
   generatedtoken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
     "mail"  : user.Email,
-    "name"  : user.Name,
+    "username"  : user.Username,
     "id"    : user.Id,
     "iat"   : time.Now().Unix(),
     "exp"   : time.Now().Add(time.Minute * 5).Unix(),

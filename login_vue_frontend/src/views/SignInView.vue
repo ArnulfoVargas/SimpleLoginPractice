@@ -3,24 +3,53 @@ import AuthLeftSide from '@/components/AuthLeftSide.vue';
 import WavesBackground from '@/components/WavesBackground.vue';
 import InputsContainer from '@/components/InputsContainer.vue';
 import InputField from '@/components/InputField.vue';
-import { useUser, useUrlBeforeRedirect } from '@/global/user_auth';
+import Alert from '@/components/Alert.vue';
+import { useUser, useUrlBeforeRedirect, useStoreData } from '@/global/user_auth';
 import router from '@/router';
-import { reactive } from 'vue';
+import { reactive, ref, watch } from 'vue';
 
 const userData = reactive({
     username    : "",
     email       : "",
     password    : ""
 })
+const errors = ref([])
 
+watch(userData, () => {
+  errors.value = []
+})
 const signin = () => {
     useUser().isAuth = true;
     const path = useUrlBeforeRedirect().value
-    router.push(path ?? "/")
+    router.push(path !== "/login" || path !== "/signin" || path !== "" ? path : "/")
 }
 
-const clickBtn = () => {
-    console.log(userData)
+const validate = () => {
+    if (userData.username.trim() === "" || userData.email.trim() === "" || userData.password.trim() === ""){
+        errors.value = ["All fields are required"]
+    }
+}
+
+const clickBtn = async() => {
+
+    validate()
+
+    if (errors.value.length > 0) return
+
+    const res = await fetch("http://localhost:3000/signin", {
+        method: "POST",
+        body: JSON.stringify(userData)
+    })
+    const data = await res.json()
+
+    if (res.status === 201)
+    {
+        useStoreData({...data})
+        signin()
+    } else {
+        const serverErrors = {...data.errors}
+        errors.value = serverErrors.msg.split(".").filter(s => s !== "")
+    }
 }
 </script>
 
@@ -30,6 +59,8 @@ const clickBtn = () => {
 
         <div class="right-side">
             <WavesBackground />
+            
+            <Alert :errors="errors"/>
 
             <InputsContainer :title="'Create an Account'" :buttonText="'Sign In'" :url="'/login'" :text="'Already have an account?'"
                 :urlText="'Login now!'" @clickBtn="clickBtn">

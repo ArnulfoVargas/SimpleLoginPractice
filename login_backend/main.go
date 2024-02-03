@@ -18,7 +18,6 @@ func main() {
   models.DbMigrate()
 	muxS := mux.NewRouter()
 
-  // muxS.Use(middleware.ValidateJWT)
   routes.HandleRoutes(muxS)
 
   // Set up Cors
